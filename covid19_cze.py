@@ -12,6 +12,8 @@ def fit_func(x, a, b):
 url = "https://cs.wikipedia.org/wiki/Pandemie_COVID-19_v_%C4%8Cesku"
 response = get(url)
 html = BeautifulSoup(response.text, 'html.parser')
+prediction_horizon = 4
+
 
 data_dict = {"date": [],
              "infected_day": [],
@@ -79,11 +81,24 @@ for j, k in zip(x, data_dict["infected_total"]):
                  xytext=(0, -20), # distance from text to points (x,y)
                  ha='center') # horizontal alignment can be left, right or center
 
-plt.plot(x, fit_func(x, *opt_params), 'r-', label="Fitted curve a * exp(b*day).\na={0:.4f}, b={1:.4f}".format(opt_params[0],opt_params[1]))
+plt.plot(x, fit_func(x, *opt_params), "r-",
+         label="Fitted curve a * exp(b*day).\na={0:.4f}, b={1:.4f}".format(opt_params[0],opt_params[1]))
 plt.grid()
-plt.legend()
+
 #plt.autoscale(enable=True, tight=True)
 plt.xlabel("day idx since 01/03/2020 [-]")
 plt.ylabel("number of infected [-]")
 
+prediction_ts = range(len(x) + prediction_horizon)
+plt.plot(prediction_ts[-prediction_horizon:],
+         fit_func(prediction_ts[-prediction_horizon:], *opt_params), "g.", label="prediction")
+for j, k in zip(prediction_ts[-prediction_horizon:], fit_func(prediction_ts[-prediction_horizon:], *opt_params)):
+
+    label = "{:.0f}".format(k)
+    plt.annotate(label, # this is the text
+                 (j, k), # this is the point to label
+                 textcoords="offset points", # how to position the text
+                 xytext=(0, -20), # distance from text to points (x,y)
+                 ha='center') # horizontal alignment can be left, right or center
+plt.legend()
 plt.show()
