@@ -42,14 +42,17 @@ for day_data in data[2:]:
     for idx, value in enumerate(day_data[1:]):
         value = value.replace(u"\xa0", u"")
         print(value)
-        if idx == 0:
-           data_dict["infected_total"].append(int(value))
-        elif idx == 2:
-            data_dict["recovered_total"].append(int(value))
-        elif idx == 4:
-            data_dict["deaths_total"].append(int(value))
-        elif idx == 6:
-            data_dict["tested_total"].append(int(value))
+        try:
+            if idx == 0:
+               data_dict["infected_total"].append(int(value))
+            elif idx == 2:
+                data_dict["recovered_total"].append(int(value))
+            elif idx == 4:
+                data_dict["deaths_total"].append(int(value))
+            elif idx == 6:
+                data_dict["tested_total"].append(int(value))
+        except ValueError:
+            pass
 
 data_dict["tested_day"] = [j-i for i, j in zip(data_dict["tested_total"][:-1], data_dict["tested_total"][1:])]
 data_dict["tested_day"].insert(0, 11)
@@ -70,7 +73,6 @@ plt.plot(data_dict["infected_total"], "s", marker="+", label="Detected cases")
 for j, k in zip(x, data_dict["infected_total"]):
 
     label = "{:.0f}".format(k)
-
     plt.annotate(label, # this is the text
                  (j, k), # this is the point to label
                  textcoords="offset points", # how to position the text
