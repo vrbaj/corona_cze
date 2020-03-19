@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
+import re
 
 
 def fit_func(x_values, a, b):
@@ -40,8 +41,10 @@ table_body = table.find("tbody")
 days = table_body.find_all("a")
 
 for day in days:
-    day_str = day.string
-    data_dict["date"].append(day_str.replace(u"\xa0", u" "))
+    if len(day.string) > 8:
+        day_str = day.string
+        print(day_str)
+        data_dict["date"].append(day_str.replace(u"\xa0", u" "))
 
 rows = table_body.find_all("tr")
 for row in rows:
@@ -51,7 +54,9 @@ for row in rows:
 
 for day_data in data[2:]:
     for idx, value in enumerate(day_data[1:]):
+
         value = value.replace(u"\xa0", u"")
+        value = re.sub(r'\[.*\]', '', value)
         try:
             if idx == 0:
                 data_dict["infected_total"].append(int(value))
