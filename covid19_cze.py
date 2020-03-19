@@ -88,7 +88,7 @@ for j, k in zip(x, data_dict["infected_total"]):
 plt.plot(x, fit_func(x, *opt_params), "r-",
          label="Fitted curve a * exp(b*day).\na={0:.4f}, b={1:.4f}".format(opt_params[0], opt_params[1]))
 plt.grid()
-plt.xlabel("day idx since 01/03/2020 [-]")
+plt.xlabel("date [-]")
 plt.ylabel("number of infected [-]")
 
 prediction_ts = range(len(x) + prediction_horizon)
